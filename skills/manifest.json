@@ -1,0 +1,383 @@
+{
+  "name": "lead_prospecting",
+  "version": "1.1.0",
+  "description": "Skill pack para assessoria financeira: enriquecimento de leads, geração de briefings, follow-ups, análise de mensagens, prospecção ativa e análise de imagens.",
+  "author": "Juan",
+  "skills": [
+    {
+      "name": "enrich_lead",
+      "description": "Enriquece um lead existente consultando CNPJá e gerando score com IA. Recebe lead_id, grava company e ai_scores no banco.",
+      "command": "python hermes/skills/enrich_lead.py",
+      "input_schema": {
+        "lead_id": "integer (obrigatório)",
+        "skip_ai": "boolean (opcional, default false)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "company_id": "integer",
+        "score_total": "integer",
+        "logs": "list[str]",
+        "errors": "list[str]"
+      },
+      "examples": [
+        "enriquece o lead 48",
+        "faz o enriquecimento da OdontoTop Palmas",
+        "score IA para lead id 50"
+      ],
+      "when_to_use": "Quando Juan pedir para enriquecer um lead específico, ou quando um lead novo for detectado sem dados de CNPJ."
+    },
+    {
+      "name": "generate_briefing",
+      "description": "Gera um briefing completo para reunião com um lead/cliente. Inclui dados da empresa, histórico de interações, produtos sugeridos e tese de abordagem.",
+      "command": "python hermes/skills/generate_briefing.py",
+      "input_schema": {
+        "company_id": "integer (obrigatório)",
+        "lead_id": "integer (opcional)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "briefing": "str",
+        "products_suggested": "list[str]",
+        "logs": "list[str]"
+      },
+      "examples": [
+        "me prepara para falar com a Alcast",
+        "briefing da reunião com Marini Indústria",
+        "resumo do cliente OdontoTop"
+      ],
+      "when_to_use": "Quando Juan tiver uma reunião agendada, ou quando pedir 'me prepare para falar com a empresa X'."
+    },
+    {
+      "name": "suggest_follow_up",
+      "description": "Analisa leads em status 'em_contato' ou 'respondeu' e sugere próximos passos de follow-up com texto personalizado.",
+      "command": "python hermes/skills/suggest_follow_up.py",
+      "input_schema": {
+        "lead_id": "integer (opcional, se omitido analisa todos)",
+        "days_since_last_contact": "integer (default 3)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "suggestions": "list[dict]",
+        "logs": "list[str]"
+      },
+      "examples": [
+        "quem precisa de follow-up?",
+        "sugestão de follow-up para OdontoTop",
+        "próximos passos dos leads"
+      ],
+      "when_to_use": "Todo dia pela manhã, ou quando Juan pedir 'quem precisa de follow-up?'."
+    },
+    {
+      "name": "parse_whatsapp",
+      "description": "Analisa uma mensagem recebida via WhatsApp e decide se é de um lead existente, novo, ou irrelevante. Atualiza interações no banco.",
+      "command": "python hermes/skills/parse_whatsapp.py",
+      "input_schema": {
+        "phone": "str (obrigatório)",
+        "message_text": "str (obrigatório)",
+        "timestamp": "str (ISO8601, opcional)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "lead_id": "integer or null",
+        "action": "str (new_lead, update_lead, ignore, urgent)",
+        "suggested_response": "str or null",
+        "logs": "list[str]"
+      },
+      "examples": [
+        "mensagem do WhatsApp +5546999999999 disse que quer receber proposta",
+        "analisar conversa do lead pelo telefone 46999999999"
+      ],
+      "when_to_use": "Sempre que uma mensagem nova chegar no WhatsApp Business conectado ao gateway."
+    },
+    {
+      "name": "update_pipeline",
+      "description": "Atualiza o estágio de uma oportunidade no pipeline comercial. Valida transições permitidas.",
+      "command": "python hermes/skills/update_pipeline.py",
+      "input_schema": {
+        "opportunity_id": "integer (obrigatório)",
+        "new_stage": "str (obrigatório)",
+        "notes": "str (opcional)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "opportunity_id": "integer",
+        "previous_stage": "str",
+        "new_stage": "str",
+        "logs": "list[str]"
+      },
+      "examples": [
+        "move a oportunidade 5 para negociacao",
+        "lead 48 fechou, atualiza pipeline"
+      ],
+      "when_to_use": "Quando Juan informar que uma proposta foi enviada, reunião realizada, ou negócio fechado/perdido."
+    },
+    {
+      "name": "daily_digest",
+      "description": "Gera um resumo diário da operação: leads novos, enriquecidos, follow-ups pendentes, reuniões do dia, alertas.",
+      "command": "python hermes/skills/daily_digest.py",
+      "input_schema": {},
+      "output_schema": {
+        "success": "boolean",
+        "digest": "str",
+        "alerts_count": "integer",
+        "logs": "list[str]"
+      },
+      "examples": [
+        "digest de hoje",
+        "resumo do dia",
+        "como está meu dia"
+      ],
+      "when_to_use": "Todo dia pela manhã, via cron ou quando Juan pedir 'como está meu dia?'."
+    },
+    {
+      "name": "market_monitor",
+      "description": "Gera alertas proativos da operação comercial: leads quentes sem contato, negociações estagnadas, reuniões amanhã, revisões pendentes.",
+      "command": "python hermes/skills/market_monitor.py",
+      "input_schema": {},
+      "output_schema": {
+        "success": "boolean",
+        "alerts": "list[dict]",
+        "message": "str"
+      },
+      "examples": [
+        "status da operação",
+        "alertas do dia",
+        "monitoramento comercial"
+      ],
+      "when_to_use": "Quando Juan pedir um check-up rápido da operação comercial."
+    },
+    {
+      "name": "whatsapp_analyzer",
+      "description": "Analisa conversas WhatsApp armazenadas na tabela interactions. Gera sentimento, palavras-chave, tempo de resposta e sugestões de follow-up.",
+      "command": "python hermes/skills/whatsapp_analyzer.py",
+      "input_schema": {
+        "lead_id": "integer (opcional)",
+        "phone": "str (opcional)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "analysis": "dict",
+        "logs": "list[str]"
+      },
+      "examples": [
+        "analisar conversa do lead 48",
+        "sentimento do WhatsApp da Alcast"
+      ],
+      "when_to_use": "Quando Juan quiser entender o histórico de uma conversa de WhatsApp."
+    },
+    {
+      "name": "project_manager",
+      "description": "Gerencia projetos pessoais do Juan: cria, lista, atualiza e conclui projetos salvos no banco SQLite.",
+      "command": "python hermes/skills/project_manager.py",
+      "input_schema": {
+        "action": "str (create|list|update)",
+        "name": "str (opcional)",
+        "project_id": "integer (opcional)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "projects": "list[dict]",
+        "message": "str"
+      },
+      "examples": [
+        "lista projetos",
+        "criar projeto Consórcio terreno",
+        "novo projeto: reformar o escritório"
+      ],
+      "when_to_use": "Quando Juan quiser organizar projetos pessoais ou profissionais fora do pipeline comercial."
+    },
+    {
+      "name": "portfolio_builder",
+      "description": "Análise qualitativa de carteira de investimentos: concentração, teses por ativo, rebalanceamento. Recebe lista de posições e ação desejada.",
+      "command": "python hermes/skills/portfolio_builder.py",
+      "input_schema": {
+        "carteira": "list[dict] (opcional)",
+        "acao": "str (alertas|teses|rebalancear)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "analysis": "str",
+        "alerts": "list[str]"
+      },
+      "examples": [
+        "análise de concentração da carteira",
+        "teses da minha carteira",
+        "rebalancear carteira"
+      ],
+      "when_to_use": "Quando Juan pedir análise da carteira de investimentos."
+    },
+    {
+      "name": "agent_council",
+      "description": "Consulta múltiplos LLMs em paralelo (Ollama, Gemini, Claude) e sintetiza uma opinião consensual. Útil para decisões importantes ou análises com múltiplas perspectivas.",
+      "command": "python hermes/skills/agent_council.py",
+      "input_schema": {
+        "question": "str (obrigatório)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "output": "str",
+        "members": "list[dict]"
+      },
+      "examples": [
+        "consulta o council: devo investir em BTC agora?",
+        "o que os outros AIs acham sobre diversificar em dólar?"
+      ],
+      "when_to_use": "Quando Juan quiser múltiplas opiniões sobre um tema de investimento ou decisão de negócio."
+    },
+    {
+      "name": "lead_finder",
+      "description": "Busca novos leads no Google Places por cidade e segmento, aplica scoring heurístico e retorna preview scored. Não salva no CRM automaticamente — espera confirmação.",
+      "command": "python hermes/skills/lead_finder.py",
+      "input_schema": {
+        "city": "str (obrigatório)",
+        "state": "str (obrigatório)",
+        "segment": "str (obrigatório)",
+        "max_results": "integer (default 10)",
+        "auto_save": "boolean (default false)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "leads": "list[dict]",
+        "saved_count": "integer",
+        "message": "str"
+      },
+      "examples": [
+        "prospectar clínicas odontológicas em Palmas-PR",
+        "buscar leads de advocacia em Francisco Beltrão",
+        "encontrar médicos especialistas em Chapecó SC"
+      ],
+      "when_to_use": "Quando Juan quiser abastecer o pipeline com novos leads de uma cidade/segmento específicos."
+    },
+    {
+      "name": "vision",
+      "description": "Analisa imagens via OCR local + LLM. Interpreta prints de posição, tabelas de previdência, cartões de visita, gráficos e documentos. Pode sugerir criar lead a partir de cartão de visita.",
+      "command": "python hermes/skills/vision.py",
+      "input_schema": {
+        "image_path": "str (obrigatório)",
+        "caption": "str (opcional)",
+        "task": "str (auto|cartao|tabela|grafico|print|documento, default auto)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "ocr_text": "str",
+        "analysis": "str",
+        "suggested_action": "str or null"
+      },
+      "examples": [
+        "[foto de cartão de visita] extrair contato",
+        "[print da carteira] analisar concentração",
+        "[tabela de previdência] comparar com nossa oferta"
+      ],
+      "when_to_use": "Quando Juan enviar uma imagem (print, tabela, cartão, gráfico) e quiser insights ou extração de dados."
+    },
+    {
+      "name": "video",
+      "description": "Processa vídeos e reuniões gravadas: transcrição com diarização (Gladia), minuta inteligente estruturada, OCR de slides, sugestão de cortes para Shorts/Reels, renderização real de cortes em MP4 (horizontal, vertical 9:16 ou quadrado) e salvamento no CRM. Suporta contextos lead, escritorio, marketing e outro.",
+      "command": "python hermes/skills/video.py",
+      "input_schema": {
+        "video_path": "str (obrigatório)",
+        "action": "str (summarize|transcribe|extract_frames|suggest_cuts|render_cuts|generate_and_render_cuts, default summarize)",
+        "caption": "str (opcional)",
+        "context_hint": "str (auto|lead|escritorio|marketing|outro, default auto)",
+        "cuts": "list[dict] (render_cuts: inicio, fim, titulo, hook, cta)",
+        "n_cuts": "integer (generate_and_render_cuts, default 3)",
+        "target_duration": "str (generate_and_render_cuts, default 30-60s)",
+        "aspect": "str (original|vertical|square, default original)",
+        "output_dir": "str (opcional)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "error": "str or null",
+        "action": "str",
+        "video_path": "str",
+        "duration": "str",
+        "context_type": "str",
+        "minute": "dict (minuta estruturada)",
+        "transcript": "dict (full_text, utterances)",
+        "slides_text": "str",
+        "ask_classification": "boolean",
+        "save_candidates": "list[dict]",
+        "generated_cuts": "list[dict] (generate_and_render_cuts)",
+        "rendered_cuts": "list[dict] (generate_and_render_cuts/render_cuts)",
+        "output_dir": "str"
+      },
+      "examples": [
+        "[video] resumir reunião com lead",
+        "[video] transcrever reunião interna",
+        "[video] sugerir cortes para reel",
+        "[video] gerar e renderizar cortes vertical",
+        "renderizar corte do video de 0:12 a 0:52"
+      ],
+      "when_to_use": "Quando Juan enviar um vídeo de reunião, ligação, conteúdo de marketing ou qualquer vídeo que precise ser transcrito, resumido, recortado e persistido no CRM."
+    },
+    {
+      "name": "audio_transcribe",
+      "description": "Transcreve áudio de forma inteligente e rápida: áudios curtos usam faster-whisper tiny local (1-3s em CPU), áudios longos ou com diarização usam Gladia cloud, e existe fallback para faster-whisper base local.",
+      "command": "python hermes/skills/audio_transcribe.py",
+      "input_schema": {
+        "audio_path": "str (obrigatório)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "transcript": "str",
+        "method": "str (whisper_tiny|gladia|whisper_base|none)",
+        "duration_seconds": "float",
+        "elapsed_seconds": "float",
+        "logs": "list[str]"
+      },
+      "examples": [
+        "transcrever áudio /caminho/audio.webm",
+        "transcrever mensagem de voz",
+        "áudio para texto"
+      ],
+      "when_to_use": "Sempre que Juan enviar um áudio no Telegram ou gravar áudio no Cockpit e precisar do texto transcrito."
+    },
+    {
+      "name": "create_alert",
+      "description": "Cria um alerta/sugestão na tabela hermes_alerts para o painel mostrar. Usado por outras skills para comunicar com Juan.",
+      "command": "python hermes/skills/create_alert.py",
+      "input_schema": {
+        "alert_type": "str (sugestao, urgencia, lembrete, insight)",
+        "lead_id": "integer (opcional)",
+        "company_id": "integer (opcional)",
+        "title": "str (obrigatório)",
+        "description": "str (obrigatório)",
+        "suggested_action": "str (opcional)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "alert_id": "integer",
+        "logs": "list[str]"
+      },
+      "examples": [
+        "criar alerta de urgência para lead 48",
+        "me lembra de ligar para Alcast amanhã"
+      ],
+      "when_to_use": "Sempre que uma skill detectar algo que Juan precisa ver no painel."
+    },
+    {
+      "name": "workflow_assistant",
+      "description": "Gera um fluxo de trabalho (workflow) estruturado a partir de uma descrição em linguagem natural. Usa LLM com fallback para templates heurísticos.",
+      "command": "python hermes/skills/workflow_assistant.py",
+      "input_schema": {
+        "description": "str (obrigatório)",
+        "name": "str (opcional)",
+        "category": "str (opcional)"
+      },
+      "output_schema": {
+        "success": "boolean",
+        "name": "str",
+        "description": "str",
+        "category": "str",
+        "definition_json": "dict (nodes e edges)",
+        "message": "str"
+      },
+      "examples": [
+        "criar fluxo de prospecção para clínicas odontológicas em Palmas-PR",
+        "gerar workflow de follow-up diário",
+        "montar fluxo de digest executivo"
+      ],
+      "when_to_use": "Quando Juan pedir para criar, gerar ou montar um fluxo de trabalho no Workflow Studio."
+    }
+  ]
+}

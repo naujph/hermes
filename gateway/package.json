@@ -1,0 +1,18 @@
+{
+  "name": "hermes-whatsapp-gateway",
+  "version": "1.0.0",
+  "description": "Gateway WhatsApp para Hermes Secretary usando Baileys",
+  "main": "gateway.js",
+  "scripts": {
+    "start": "node gateway.js",
+    "dev": "node gateway.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.8",
+    "axios": "^1.7.2",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

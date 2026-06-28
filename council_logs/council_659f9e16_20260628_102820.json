@@ -1,0 +1,26 @@
+{
+  "job_id": "659f9e16",
+  "question": "{\"question\": \"teste simples\"}",
+  "timestamp": "2026-06-28T10:28:20.593679",
+  "members": [
+    {
+      "member": "gemini",
+      "emoji": "💎",
+      "response": "[ERRO: GEMINI_API_KEY nao configurada]",
+      "ok": true
+    },
+    {
+      "member": "claude",
+      "emoji": "🎯",
+      "response": "[ERRO Claude: [anthropic] HTTP Error 401: Unauthorized]",
+      "ok": true
+    },
+    {
+      "member": "kimi",
+      "emoji": "🧠",
+      "response": "[ERRO Ollama: [openai] HTTP Error 410: Gone]",
+      "ok": true
+    }
+  ],
+  "synthesis_ready": true
+}

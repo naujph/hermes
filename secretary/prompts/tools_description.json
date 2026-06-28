@@ -1,0 +1,439 @@
+[
+  {
+    "name": "direct_response",
+    "description": "Responde diretamente ao usuário sem usar nenhuma ferramenta. Use para conversação casual, saudações, despedidas, ou quando não há ação a executar.",
+    "parameters": [
+      {
+        "name": "text",
+        "type": "string",
+        "description": "Texto da resposta natural",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "query_db",
+    "description": "Executa uma query SQL segura no banco SQLite do projeto. Use para consultar leads, reuniões, oportunidades, comissões e hermes_alerts (alertas, notas internas, conhecimento, briefings de marketing). SOMENTE SELECTs são permitidos automaticamente. UPDATE/DELETE/INSERT exigem confirmação implícita do usuário.",
+    "parameters": [
+      {
+        "name": "query",
+        "type": "string",
+        "description": "Query SQL. Ex: SELECT COUNT(*) as total FROM leads WHERE hot_lead = 1",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "search_alerts",
+    "description": "Busca alertas, notas internas, conhecimento do escritório e briefings de marketing salvos no painel (tabela hermes_alerts). Use quando Juan perguntar 'onde está o resumo', 'mostra notas internas', 'últimos alertas', 'resumo da reunião de consórcios', 'briefings de marketing', etc.",
+    "parameters": [
+      {
+        "name": "query",
+        "type": "string",
+        "description": "Palavras-chave para buscar em título/descrição. Ex: 'consórcio', 'reunião de escritório', 'prospecção'",
+        "required": false
+      },
+      {
+        "name": "alert_type",
+        "type": "string",
+        "description": "Tipo de alerta: conhecimento, nota, oportunidade, marketing, insight, info, warning, action_required",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "description": "Status do alerta: novo, visto, resolvido, etc.",
+        "required": false
+      },
+      {
+        "name": "days",
+        "type": "integer",
+        "description": "Buscar apenas registros dos últimos N dias.",
+        "required": false
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "description": "Máximo de resultados. Padrão 10.",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "cancel_meeting",
+    "description": "Cancela uma reunião agendada. Pode buscar por ID exato ou por fragmento do título/horário.",
+    "parameters": [
+      {
+        "name": "meeting_id",
+        "type": "integer",
+        "description": "ID exato da reunião no banco. Use se souber.",
+        "required": false
+      },
+      {
+        "name": "title_fragment",
+        "type": "string",
+        "description": "Fragmento do título ou horário para buscar. Ex: '15h', 'reunião com João'.",
+        "required": false
+      },
+      {
+        "name": "reason",
+        "type": "string",
+        "description": "Motivo do cancelamento",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "run_skill",
+    "description": "Executa uma skill existente do Hermes (scripts em hermes/skills/). Skills disponíveis: daily_digest, generate_briefing, suggest_follow_up, enrich_lead, create_alert.",
+    "parameters": [
+      {
+        "name": "skill_name",
+        "type": "string",
+        "description": "Nome da skill (sem .py). Ex: daily_digest",
+        "required": true
+      },
+      {
+        "name": "payload",
+        "type": "object",
+        "description": "JSON com argumentos da skill. Ex: {\"company_id\": 1}",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "update_memory",
+    "description": "Adiciona, atualiza ou remove fatos na memória pessoal do Juan. Use SEMPRE que ele mencionar preferências, rotinas, contatos, projetos ou dados pessoais.",
+    "parameters": [
+      {
+        "name": "action",
+        "type": "string",
+        "description": "'add', 'update' ou 'delete'",
+        "required": true
+      },
+      {
+        "name": "category",
+        "type": "string",
+        "description": "Categoria: pessoal, profissao, tecnologia, preferencia, rotina, contato, projeto",
+        "required": true
+      },
+      {
+        "name": "key",
+        "type": "string",
+        "description": "Chave do fato. Ex: 'horario_preferido', 'nome_cliente_X'",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "description": "Valor do fato",
+        "required": true
+      },
+      {
+        "name": "confidence",
+        "type": "number",
+        "description": "Confiança de 0.0 a 1.0. Padrão: 0.9",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "self_modify",
+    "description": "Permite o Hermes ajustar seus próprios prompts e configurações. Use quando Juan pedir para mudar seu tom, comportamento, ou adicionar regras. SÓ edita arquivos em hermes/secretary/prompts/ e context/.",
+    "parameters": [
+      {
+        "name": "action",
+        "type": "string",
+        "description": "'append_to_prompt', 'replace_prompt', 'add_rule'",
+        "required": true
+      },
+      {
+        "name": "target",
+        "type": "string",
+        "description": "Arquivo alvo. Ex: 'system_prompt.txt'",
+        "required": true
+      },
+      {
+        "name": "content",
+        "type": "string",
+        "description": "Conteúdo a adicionar/substituir",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "generate_code",
+    "description": "Gera um script Python baseado em descrição textual e salva em sandbox/. SEMPRE use isso antes de run_code, para que o usuário veja o código antes de confirmar execução.",
+    "parameters": [
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Descrição do que o código deve fazer",
+        "required": true
+      },
+      {
+        "name": "language",
+        "type": "string",
+        "description": "Linguagem. Padrão: python",
+        "required": false
+      },
+      {
+        "name": "save_path",
+        "type": "string",
+        "description": "Caminho relativo para salvar. Ex: 'sandbox/calculo_comissao.py'",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "run_code",
+    "description": "Executa um script Python previamente gerado. SÓ execute se confirmed=true. O código roda em sandbox restrito com timeout e denylist de comandos perigosos.",
+    "parameters": [
+      {
+        "name": "file_path",
+        "type": "string",
+        "description": "Caminho do arquivo .py a executar",
+        "required": false
+      },
+      {
+        "name": "code",
+        "type": "string",
+        "description": "Código Python inline (alternativa a file_path)",
+        "required": false
+      },
+      {
+        "name": "confirmed",
+        "type": "boolean",
+        "description": "Deve ser true para executar. Se false, apenas mostra o código.",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "create_alert",
+    "description": "Cria um alerta no painel Streamlit (tabela hermes_alerts). Use para lembretes importantes ou ações que precisam de revisão visual no painel.",
+    "parameters": [
+      {
+        "name": "alert_type",
+        "type": "string",
+        "description": "Tipo: info, warning, action_required",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Título curto do alerta",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "description": "Descrição detalhada",
+        "required": true
+      },
+      {
+        "name": "lead_id",
+        "type": "integer",
+        "description": "ID do lead relacionado (opcional)",
+        "required": false
+      },
+      {
+        "name": "company_id",
+        "type": "integer",
+        "description": "ID da empresa relacionada (opcional)",
+        "required": false
+      },
+      {
+        "name": "suggested_action",
+        "type": "string",
+        "description": "Ação sugerida (opcional)",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "whatsapp_analyzer",
+    "description": "Analisa conversas WhatsApp de um lead: sentimento, palavras-chave, tempo de resposta, sugestão de follow-up. Use quando Juan pedir para analisar uma conversa, entender o tom de um lead, ou sugerir próximo passo baseado no histórico de mensagens.",
+    "parameters": [
+      {
+        "name": "lead_id",
+        "type": "integer",
+        "description": "ID do lead no banco",
+        "required": false
+      },
+      {
+        "name": "phone",
+        "type": "string",
+        "description": "Número de telefone/WhatsApp do lead (alternativa a lead_id)",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "portfolio_builder",
+    "description": "Gera teses de investimento (ex: 70/30 RV/RF) ou análise fundamentalista de ação. Use quando Juan pedir para montar uma carteira, alocar recursos, ou analisar um ticker.",
+    "parameters": [
+      {
+        "name": "tesis_type",
+        "type": "string",
+        "description": "Tipo de tese. Ex: '70_30'",
+        "required": false
+      },
+      {
+        "name": "valor",
+        "type": "number",
+        "description": "Valor total a alocar (para tese 70_30)",
+        "required": false
+      },
+      {
+        "name": "acao",
+        "type": "string",
+        "description": "Ticker da ação para análise. Ex: 'PETR4'",
+        "required": false
+      },
+      {
+        "name": "horizonte",
+        "type": "string",
+        "description": "Horizonte da análise. Ex: '12_meses'",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "project_manager",
+    "description": "Gerencia projetos pessoais do Juan: lista, cria, atualiza. Use quando ele pedir para criar um projeto, listar projetos, ou atualizar status de algo pessoal (consórcio, mudança, etc).",
+    "parameters": [
+      {
+        "name": "action",
+        "type": "string",
+        "description": "'create', 'list', 'update'",
+        "required": true
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Nome do projeto (para create)",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "string",
+        "description": "Status: ativo, em_andamento, concluido, pausado, cancelado",
+        "required": false
+      },
+      {
+        "name": "priority",
+        "type": "string",
+        "description": "Prioridade: baixa, media, alta, urgente",
+        "required": false
+      },
+      {
+        "name": "notes",
+        "type": "string",
+        "description": "Anotações do projeto",
+        "required": false
+      },
+      {
+        "name": "project_id",
+        "type": "integer",
+        "description": "ID do projeto (para update)",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "market_monitor",
+    "description": "Gera alertas proativos baseados nos dados do painel: leads hot sem contato, oportunidades estagnadas, reuniões amanhã sem briefing, leads em revisão pendente. Use quando Juan pedir um check-up da operação ou alertas do dia.",
+    "parameters": []
+  },
+  {
+    "name": "web_search",
+    "description": "Faz busca na web (DuckDuckGo) ou extrai texto de URLs. Use quando Juan pedir pesquisas gerais, notícias atuais, ou enviar um link para resumir.",
+    "parameters": [
+      {
+        "name": "action",
+        "type": "string",
+        "description": "'search' ou 'read_url'",
+        "required": true
+      },
+      {
+        "name": "query",
+        "type": "string",
+        "description": "O termo a pesquisar (se action='search') ou a URL a ler (se action='read_url')",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "manage_tasks",
+    "description": "Gerenciador nativo de tarefas/TODOs do Juan. Substitui o Obsidian. Use sempre que ele pedir para 'lembrar de fazer algo' amanhã, depois, etc.",
+    "parameters": [
+      {
+        "name": "action",
+        "type": "string",
+        "description": "'add', 'list', 'complete', 'delete'",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "description": "Título da tarefa (para add)",
+        "required": false
+      },
+      {
+        "name": "due_date",
+        "type": "string",
+        "description": "Data limite no formato YYYY-MM-DD (para add)",
+        "required": false
+      },
+      {
+        "name": "task_id",
+        "type": "string",
+        "description": "ID da tarefa (para complete ou delete)",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "local_commander",
+    "description": "Executa comandos no terminal do Windows/WSL no projeto atual. Use para iniciar scripts de automação, checar status, etc.",
+    "parameters": [
+      {
+        "name": "command",
+        "type": "string",
+        "description": "O comando para executar no terminal (ex: 'git status', 'python hermes/skills/daily_digest.py')",
+        "required": true
+      },
+      {
+        "name": "background",
+        "type": "boolean",
+        "description": "Se true, o comando roda em background. Padrão false.",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "draft_email",
+    "description": "Cria rascunhos de e-mail profissionais para clientes e os salva. Use quando Juan pedir 'escreva um e-mail cobrando X' ou 'esboce uma proposta'.",
+    "parameters": [
+      {
+        "name": "recipient",
+        "type": "string",
+        "description": "Nome ou empresa do destinatário",
+        "required": true
+      },
+      {
+        "name": "subject",
+        "type": "string",
+        "description": "Assunto do e-mail",
+        "required": true
+      },
+      {
+        "name": "body",
+        "type": "string",
+        "description": "Corpo do e-mail formatado (gerado por você com base nas instruções)",
+        "required": true
+      }
+    ]
+  }
+]

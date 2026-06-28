@@ -1,0 +1,2 @@
+invalid type: string "Usuario: olá\nHermes: Opa, Juan! 👋\n\nTudo certo? Tô aqui. Snapshot comercial agora: **11 leads** (🔥 6 hot), **0 reuniões hoje** e **23 alertas pendentes**.\n\nQuer que eu priorize alguma coisa ou tá só de passagem?", expected i64f64tion=caption or \"Nenhuma\")\r\nKeyError: '\"context_type\"'\r\n", expected a booleanhermes\skills\video.py", line 768, in main
+    r

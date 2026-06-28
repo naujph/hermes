@@ -1,0 +1,183 @@
+{
+  "version": 2,
+  "owner": "Juan",
+  "updated_at": "2026-06-22T17:36:16.475397+00:00",
+  "profile": {
+    "nome": "Juan",
+    "idade": 24,
+    "local": "Palmas-PR",
+    "formacao": "5o periodo Ciencias Contabeis",
+    "cargo": "Assessor de Investimentos Independente (solo operator)",
+    "empresa": "A1 Investimentos (XP)",
+    "area": "Wealth Management / Private Banking",
+    "certificacoes": [
+      "ANBIMA CPro"
+    ],
+    "estudando": [
+      "ANCORD"
+    ],
+    "situacao_assessoria": "Em delay burocratico para comecar a atuar. Treinamento XP em 30-40 dias. Foco horario comercial. Escritorio tem solucoes que rentabilizam melhor que investimentos tradicionais. Situacao financeira apertada. Pretende ir alem de investimentos quando fizer sentido pro cliente.",
+    "perfil_investidor": "Agressivo: 70% acoes (solidas + crescimento) + 30% ETFs para liquidez. Sem capital atual, estrategia pos-endividamento consorcio.",
+    "familia": "Mora com Alianely (audiovisual) e 2 cachorros (Chico e Charlotte).",
+    "rotina": "Calistenia/musculacao, cozinhar em casa.",
+    "lazer": "Jogador competitivo Warzone/Valorant com setup high-end.",
+    "tom_preferido": "profissional, pragmatico, direto, informalidade inteligente — braco direito do Juan"
+  },
+  "projects": [
+    {
+      "nome": "Acumen Score",
+      "tipo": "SaaS B2B",
+      "descricao": "Evolucao financeira para empresas — scoring de saude financeira + gamificacao",
+      "stack": [
+        "Next.js 14+",
+        "Tailwind + shadcn/ui",
+        "PostgreSQL (Supabase)",
+        "Prisma",
+        "Supabase Auth",
+        "Groq API (llama-3.3-70b-versatile)",
+        "Vercel"
+      ],
+      "regras_de_ouro": [
+        "Proibido mock fake — sempre dados reais",
+        "Proibido UI sem API — toda funcionalidade precisa de rota backend",
+        "Mobile-first — testar em 375px",
+        "Auto-save com debounce de 2s",
+        "Font-mono para todos os valores numericos",
+        "Filosofia do Guia: O Agente Guia e um LIVRO, nao um analista. Ele aponta o caminho, explica o conceito, mas NUNCA entrega o dado mastigado."
+      ],
+      "score_system": {
+        "range": "0 a 1000 pontos",
+        "componentes": {
+          "base": "70% (700 pts) — Dados financeiros objetivos",
+          "dinamica": "30% (300 pts) — Acoes e comportamento do usuario"
+        },
+        "metricas": {
+          "fluxo_de_caixa": "25% (175 pts) — Meses de runway positivo",
+          "reserva": "20% (140 pts) — Meses de despesas cobertas",
+          "margem_de_lucro": "15% (105 pts)",
+          "crescimento": "10% (70 pts)",
+          "eficiencia_operacional": "10% (70 pts)",
+          "controle_de_estoque": "5% (35 pts)",
+          "consistencia": "5% (35 pts)"
+        }
+      },
+      "gamificacao": {
+        "moedas": "Sistema de moedas virtual para engajamento",
+        "conquistas": "Badges e conquistas por metas atingidas",
+        "checkin_diario": "Recompensa por uso continuo"
+      }
+    },
+    {
+      "nome": "Lead Prospecting Engine",
+      "tipo": "Hub local de prospeccao",
+      "descricao": "CRM, pipeline comercial, scoring de leads, IA assistida, comissoes e receita",
+      "stack": [
+        "Python 3.14",
+        "SQLite",
+        "Streamlit",
+        "Ollama Cloud (kimi-k2:1t)",
+        "Telegram Bot"
+      ],
+      "status": "Hermes como secretario operacional via Telegram. Suporta texto, audio (Faster-Whisper), foto (OCR), video, documento.",
+      "features": [
+        "Agent Council — consulta multiplos AIs",
+        "Local Daemon — opera o PC em tempo real",
+        "Memoria pessoal persistente (este arquivo)",
+        "Integracao com Google Calendar",
+        "Bio page estatica"
+      ]
+    }
+  ],
+  "tech_stack": {
+    "acumen": {
+      "frontend": "Next.js 14+ (App Router), Tailwind, shadcn/ui",
+      "backend": "Supabase (PostgreSQL + Auth), Prisma",
+      "ia": "Groq API — llama-3.3-70b-versatile",
+      "deploy": "Vercel",
+      "regras": "SSR obrigatorio, RBAC via app_metadata, proibido mock fake, API-first"
+    },
+    "hermes": {
+      "runtime": "Python 3.14 no Windows",
+      "banco": "SQLite local",
+      "ui": "Streamlit (painel), Telegram (bot)",
+      "ia": "Ollama Cloud — kimi-k2:1t",
+      "stt": "Faster-Whisper",
+      "ocr": "Tesseract + pytesseract",
+      "ocr_status": "Tesseract v5.5.0 instalado e funcionando"
+    }
+  },
+  "ambiente": {
+    "os": "Windows 11 Pro (modificado por debloater Renan)",
+    "wsl": "WSL2 Ubuntu 26.04 LTS — Ollama local v0.30.5",
+    "ollama_cloud": "https://ollama.com/v1 — modelo kimi-k2:1t",
+    "tesseract": "C:\\Program Files\\Tesseract-OCR\\tesseract.exe — v5.5.0.20241111",
+    "python": "3.14.3",
+    "obsidian": "REMOVIDO — usando memoria local JSON"
+  },
+  "comandos_hermes": {
+    "texto": "Qualquer pergunta natural",
+    "audio": "Mensagem de voz (transcricao Faster-Whisper)",
+    "foto": "OCR extrai texto da imagem",
+    "video": "Extrai audio e transcreve",
+    "documento": "Le TXT, MD, CSV, JSON, PY, JS, HTML",
+    "/daemon": "Status do agente local",
+    "/run": "Executa acoes no PC (system_info, open_app, list_dir, etc)",
+    "/memory": "Ver memoria pessoal",
+    "/reset": "Limpa historico",
+    "/snapshot": "Status do sistema",
+    "/help": "Ajuda"
+  },
+  "conversas": [
+    {
+      "data": "2026-06-06",
+      "resumo": "Configuracao inicial do Hermes no Telegram. Integracao com Obsidian vault (depois removida). Criacao do Local Daemon. Testes de audio, OCR, video. Migrou de Whisper para Faster-Whisper. Configurou Tesseract.",
+      "topicos": [
+        "telegram",
+        "bot",
+        "daemon",
+        "ollama",
+        "whisper",
+        "tesseract"
+      ]
+    },
+    {
+      "data": "2026-06-07",
+      "resumo": "Implementacao completa do Agent Council. Criacao dos scripts .bat para auto-start. Tentativa frustrada de integrar com Obsidian (removido). Decisao de usar memoria local JSON.",
+      "topicos": [
+        "council",
+        "autostart",
+        "obsidian_removido",
+        "memoria_local"
+      ]
+    }
+  ],
+  "preferencias": {
+    "horario_preferido_reunioes": "manha",
+    "formato_respostas": "curto_e_direto",
+    "tom_de_voz": "profissional_mas_proximo",
+    "notificacoes_proativas": true,
+    "confirmar_execucao_codigo": true,
+    "interface_preferida": "Telegram (ate chip WhatsApp chegar)",
+    "auto_start": "scripts/start_hermes_master.bat"
+  },
+  "historico_windows": {
+    "bios_resetada": true,
+    "virtualizacao_habilitada": true,
+    "wsl_funcionando": true,
+    "windows_update_travado": "Chaves de registro impostas por debloater",
+    "servicos_criticos": "Alguns parados ou com startup errado"
+  },
+  "facts": [
+    {
+      "id": "fact_16f819bb",
+      "category": "preferencia",
+      "key": "eu prefiro reuniões de manhã",
+      "value": "eu prefiro reuniões de manhã",
+      "confidence": 0.9,
+      "source": "hermes",
+      "created_at": "2026-06-22T17:36:14.474946+00:00"
+    }
+  ],
+  "contacts_important": [],
+  "routines": []
+}
